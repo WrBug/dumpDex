@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+        releaseConfig
+    }
+    compileSdkVersion 23
+    buildToolsVersion '26.0.2'
+    defaultConfig {
+        applicationId "com.wrbug.dumpdex"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            versionNameSuffix "-debug"
+            if (signingConfigs.releaseConfig != null) {
+                signingConfig signingConfigs.releaseConfig
+            }
+        }
+        release {
+            minifyEnabled false
+            if (signingConfigs.releaseConfig != null) {
+                signingConfig signingConfigs.releaseConfig
+            }
+        }
+    }
+}
+
+
+Properties props = new Properties()
+def propFile = file('../signing.properties')
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+    if (props != null &&
+            props.containsKey('SIGN_FILE') && props.containsKey('SIGN_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.releaseConfig.storeFile = file(props['SIGN_FILE'])
+        android.signingConfigs.releaseConfig.storePassword = props['SIGN_PASSWORD']
+        android.signingConfigs.releaseConfig.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.releaseConfig.keyPassword = props['KEY_PASSWORD']
+    } else {
+        println 'release build not found signing properties'
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    println 'release build not found signing file'
+    android.buildTypes.release.signingConfig = null
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    provided 'de.robv.android.xposed:api:82'
+    compile 'com.jaredrummler:android-shell:1.0.0'
+}
