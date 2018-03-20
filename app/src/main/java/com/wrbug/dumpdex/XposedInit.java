@@ -50,7 +50,7 @@ public class XposedInit implements IXposedHookLoadPackage {
         final String packageName = lpparam.packageName;
         XposedBridge.log(packageName);
         try {
-            getDexMethod();
+            initDexMethod();
         } catch (Throwable t) {
             log(t);
             return;
@@ -85,7 +85,7 @@ public class XposedInit implements IXposedHookLoadPackage {
         }
     }
 
-    public void getDexMethod() throws ClassNotFoundException, NoSuchMethodException {
+    public void initDexMethod() throws ClassNotFoundException, NoSuchMethodException {
         Class dex = Class.forName("com.android.dex.Dex");
         this.getBytesMethod = dex.getDeclaredMethod("getBytes");
         this.getDexMethod = Class.forName("java.lang.Class").getDeclaredMethod("getDex");
