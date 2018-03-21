@@ -17,6 +17,10 @@ Android8.0以下机型
 [https://pan.baidu.com/s/1DTR-XjWnniFHx-cB1Iib5Q](https://pan.baidu.com/s/1DTR-XjWnniFHx-cB1Iib5Q)
 
 
+## 更多精彩内容请关注博客
+
+[https://www.wrbug.com/](https://www.wrbug.com/)
+
 ### 支持开发，欢迎打赏
 
 ![](/pay.png)
