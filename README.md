@@ -7,7 +7,7 @@
 Android Studio 3.0
 jdk1.8
 
-**无法脱壳，请在 [XposedInit.java](https://github.com/WrBug/dumpDex/blob/master/app/src/main/java/com/wrbug/dumpdex/XposedInit.java#L31)文件中，将应用的包名加到packages字段里，编译安装即可**
+**无法脱壳，请在 [XposedInit.java](https://github.com/WrBug/dumpDex/blob/master/app/src/main/java/com/wrbug/dumpdex/XposedInit.java#L31)文件中，将应用的包名加到packages字段里，编译安装即可,欢迎提交Pull Requests，让软件更加全面**
 
 ### 支持设备
 
