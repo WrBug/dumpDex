@@ -3,6 +3,7 @@ package com.wrbug.dumpdex;
 import java.io.File;
 import java.lang.reflect.Method;
 
+import dalvik.system.DexFile;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -19,7 +20,8 @@ public class XposedInit implements IXposedHookLoadPackage {
 
     private Method getBytesMethod;
     private Method getDexMethod;
-    private String[] packages = {"com.stub.StubApp", "s.h.e.l.l.S"};
+    private String[] packages = {"com.stub.StubApp", "s.h.e.l.l.S",
+            "com.secneo.apkwrapper.ApplicationWrapper", "com.tencent.StubShell.TxAppEntry"};
 
     public static void log(String txt) {
         if (!BuildConfig.DEBUG) {
@@ -41,6 +43,7 @@ public class XposedInit implements IXposedHookLoadPackage {
         for (String aPackage : packages) {
             clazz = XposedHelpers.findClassIfExists(aPackage, lpparam.classLoader);
             if (clazz != null) {
+                log("find class:" + aPackage);
                 break;
             }
         }
