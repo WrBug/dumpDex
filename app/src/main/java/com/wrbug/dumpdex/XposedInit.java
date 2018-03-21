@@ -3,7 +3,6 @@ package com.wrbug.dumpdex;
 import java.io.File;
 import java.lang.reflect.Method;
 
-import dalvik.system.DexFile;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -20,6 +19,15 @@ public class XposedInit implements IXposedHookLoadPackage {
 
     private Method getBytesMethod;
     private Method getDexMethod;
+
+
+    /**
+     * 加固应用包含的包名，如果无法脱壳，请将application的包名，加到此数组
+     * com.stub.StubApp 360加固
+     * s.h.e.l.l.S 爱加密
+     * com.secneo.apkwrapper.ApplicationWrapper 梆梆加固
+     * com.tencent.StubShell.TxAppEntry 腾讯加固
+     */
     private String[] packages = {"com.stub.StubApp", "s.h.e.l.l.S",
             "com.secneo.apkwrapper.ApplicationWrapper", "com.tencent.StubShell.TxAppEntry"};
 
@@ -55,6 +63,7 @@ public class XposedInit implements IXposedHookLoadPackage {
         try {
             initDexMethod();
         } catch (Throwable t) {
+            //Android版本不支持该插件
             log(t);
             return;
         }
@@ -92,6 +101,5 @@ public class XposedInit implements IXposedHookLoadPackage {
         Class dex = Class.forName("com.android.dex.Dex");
         this.getBytesMethod = dex.getDeclaredMethod("getBytes");
         this.getDexMethod = Class.forName("java.lang.Class").getDeclaredMethod("getDex");
-
     }
 }
