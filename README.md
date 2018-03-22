@@ -20,6 +20,7 @@ Android8.0以下机型
 
 下载源码编译或者下载apk包并安装，应用xposed模块后重启，运行加固的应用后，插件会自动将dex文件dump到 **/data/data/包名/dump** 目录
 
+<font color='red'>apk文件不会实时更新，获取最新apk请自行编译源码</font>
 
 ## apk 下载
 
