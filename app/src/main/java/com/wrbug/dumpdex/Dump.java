@@ -24,7 +24,12 @@ public class Dump {
         log("decCache=" + dexCache);
         Object o = XposedHelpers.callMethod(dexCache, "getDex");
         byte[] bytes = (byte[]) XposedHelpers.callMethod(o, "getBytes");
-        File file = new File("/data/data/" + packageName, "ddd" + bytes.length + ".dex");
+        String path = "/data/data/" + packageName + "/dump";
+        File parent = new File(path);
+        if (!parent.exists() || !parent.isDirectory()) {
+            parent.mkdirs();
+        }
+        File file = new File(path,"source-" + bytes.length + ".dex");
         if (file.exists()) {
             log(file.getName() + " exists");
             return;
