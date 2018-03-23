@@ -14,7 +14,10 @@ jdk1.8
 
 Android8.0以下机型
 
+### 分支
 
+[develop](https://github.com/WrBug/dumpDex/tree/develop) 开发分支
+[master](https://github.com/WrBug/dumpDex/tree/master) 稳定分支
 
 ### 使用方式
 
