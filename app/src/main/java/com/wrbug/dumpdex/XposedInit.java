@@ -1,6 +1,12 @@
 package com.wrbug.dumpdex;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.os.Build;
+
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -29,7 +35,8 @@ public class XposedInit implements IXposedHookLoadPackage {
      * com.tencent.StubShell.TxAppEntry 腾讯加固
      */
     private String[] packages = {"com.stub.StubApp", "s.h.e.l.l.S",
-            "com.secneo.apkwrapper.ApplicationWrapper", "com.tencent.StubShell.TxAppEntry"};
+            "com.secneo.apkwrapper.ApplicationWrapper", "com.tencent.StubShell.TxAppEntry"
+            , "com.baidu.protect.StubApplication"};
 
     public static void log(String txt) {
         if (!BuildConfig.DEBUG) {
@@ -59,47 +66,55 @@ public class XposedInit implements IXposedHookLoadPackage {
             return;
         }
         final String packageName = lpparam.packageName;
-        XposedBridge.log(packageName);
-        try {
-            initDexMethod();
-        } catch (Throwable t) {
-            //Android版本不支持该插件
-            log(t);
-            return;
+        if (lpparam.packageName.equals(packageName)) {
+            XposedBridge.hookAllConstructors(Application.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    log("Application=" + param.thisObject);
+                    dumpDex(packageName, param.thisObject.getClass());
+                    attachBaseContextHook(lpparam, param.thisObject);
+                }
+            });
         }
-        XposedHelpers.findAndHookMethod("java.lang.ClassLoader", lpparam.classLoader, "loadClass", String.class, boolean.class, new XC_MethodHook() {
+    }
+
+    private void dumpDex(String packageName, Class<?> aClass) {
+        if (Build.VERSION.PREVIEW_SDK_INT >= 26) {
+            DumpOreo.dumpDex(packageName, aClass);
+        } else {
+            Dump.dumpDex(packageName, aClass);
+        }
+    }
+
+
+    private void attachBaseContextHook(final XC_LoadPackage.LoadPackageParam lpparam, final Object application) {
+        XposedHelpers.findAndHookMethod("android.content.ContextWrapper", lpparam.classLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Class c = (Class) param.getResult();
-                if (c == null) {
-                    return;
+                if (param.thisObject == application) {
+                    ClassLoader classLoader = ((ContextWrapper) param.thisObject).getClassLoader();
+                    XposedHelpers.findAndHookMethod(ClassLoader.class, "loadClass", String.class, boolean.class, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            log("loadClass->" + param.args[0]);
+                            Class result = (Class) param.getResult();
+                            if (result != null) {
+                                dumpDex(lpparam.packageName, result);
+                            }
+                        }
+                    });
+                    XposedHelpers.findAndHookMethod("java.lang.ClassLoader", classLoader, "loadClass", String.class, boolean.class, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            log("loadClassWithclassLoader->" + param.args[0]);
+                            Class result = (Class) param.getResult();
+                            if (result != null) {
+                                dumpDex(lpparam.packageName, result);
+                            }
+                        }
+                    });
                 }
-                Object object = getDexMethod.invoke(c);
-                byte[] array = (byte[]) getBytesMethod.invoke(object);
-                if (array == null) {
-                    return;
-                }
-                saveData(packageName, array);
             }
         });
-    }
-
-    private void saveData(String packageName, byte[] array) {
-        String path = "/data/data/" + packageName + "/dump";
-        File parent = new File(path);
-        if (!parent.exists() || !parent.isDirectory()) {
-            parent.mkdirs();
-        }
-        final File file = new File(path, "source-" + array.length + ".dex");
-        if (!file.exists()) {
-            FileUtils.writeByteToFile(array, file.getAbsolutePath());
-            log("dump dex :" + file.getAbsolutePath());
-        }
-    }
-
-    public void initDexMethod() throws ClassNotFoundException, NoSuchMethodException {
-        Class dex = Class.forName("com.android.dex.Dex");
-        this.getBytesMethod = dex.getDeclaredMethod("getBytes");
-        this.getDexMethod = Class.forName("java.lang.Class").getDeclaredMethod("getDex");
     }
 }

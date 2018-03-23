@@ -16,7 +16,7 @@
             android:value="加固脱壳, 源码地址：https://github.com/WrBug/dumpDex"/>
         <meta-data
             android:name="xposedminversion"
-            android:value="82"/>
+            android:value="54"/>
 
         <activity android:name="com.wrbug.dumpdex.MainActivity">
             <intent-filter>
