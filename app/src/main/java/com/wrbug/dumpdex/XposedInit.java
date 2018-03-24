@@ -67,12 +67,12 @@ public class XposedInit implements IXposedHookLoadPackage {
         }
         final String packageName = lpparam.packageName;
         if (lpparam.packageName.equals(packageName)) {
-            XposedBridge.hookAllConstructors(Application.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("android.app.Instrumentation", lpparam.classLoader, "newApplication", ClassLoader.class, String.class, Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    log("Application=" + param.thisObject);
-                    dumpDex(packageName, param.thisObject.getClass());
-                    attachBaseContextHook(lpparam, param.thisObject);
+                    log("Application=" + param.getResult());
+                    dumpDex(packageName, param.getResult().getClass());
+                    attachBaseContextHook(lpparam, ((Application) param.getResult()));
                 }
             });
         }
@@ -86,33 +86,25 @@ public class XposedInit implements IXposedHookLoadPackage {
         }
     }
 
-
-    private void attachBaseContextHook(final XC_LoadPackage.LoadPackageParam lpparam, final Object application) {
-        XposedHelpers.findAndHookMethod("android.content.ContextWrapper", lpparam.classLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
+    private void attachBaseContextHook(final XC_LoadPackage.LoadPackageParam lpparam, final Application application) {
+        ClassLoader classLoader = application.getClassLoader();
+        XposedHelpers.findAndHookMethod(ClassLoader.class, "loadClass", String.class, boolean.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (param.thisObject == application) {
-                    ClassLoader classLoader = ((ContextWrapper) param.thisObject).getClassLoader();
-                    XposedHelpers.findAndHookMethod(ClassLoader.class, "loadClass", String.class, boolean.class, new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                            log("loadClass->" + param.args[0]);
-                            Class result = (Class) param.getResult();
-                            if (result != null) {
-                                dumpDex(lpparam.packageName, result);
-                            }
-                        }
-                    });
-                    XposedHelpers.findAndHookMethod("java.lang.ClassLoader", classLoader, "loadClass", String.class, boolean.class, new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                            log("loadClassWithclassLoader->" + param.args[0]);
-                            Class result = (Class) param.getResult();
-                            if (result != null) {
-                                dumpDex(lpparam.packageName, result);
-                            }
-                        }
-                    });
+                log("loadClass->" + param.args[0]);
+                Class result = (Class) param.getResult();
+                if (result != null) {
+                    dumpDex(lpparam.packageName, result);
+                }
+            }
+        });
+        XposedHelpers.findAndHookMethod("java.lang.ClassLoader", classLoader, "loadClass", String.class, boolean.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                log("loadClassWithclassLoader->" + param.args[0]);
+                Class result = (Class) param.getResult();
+                if (result != null) {
+                    dumpDex(lpparam.packageName, result);
                 }
             }
         });
