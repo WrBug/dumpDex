@@ -13,6 +13,14 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a"
+        }
     }
     buildTypes {
         debug {
@@ -26,6 +34,12 @@ android {
             if (signingConfigs.releaseConfig != null) {
                 signingConfig signingConfigs.releaseConfig
             }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
         }
     }
 }

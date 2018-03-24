@@ -1,17 +1,21 @@
-package com.wrbug.dumpdex;
+package com.wrbug.dumpdex.dump;
+
+import com.wrbug.dumpdex.BuildConfig;
+import com.wrbug.dumpdex.Native;
 
 import java.io.File;
 
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
- * DumpOreo
+ * OreoDump
  *
  * @author suanlafen
  * @since 2018/3/23
  */
-public class DumpOreo {
+public class OreoDump {
 
     public static void log(String txt) {
         if (!BuildConfig.DEBUG) {
@@ -20,7 +24,7 @@ public class DumpOreo {
         XposedBridge.log("dumpdex-> " + txt);
     }
 
-    public static void dumpDex(String packageName, Class<?> aClass) {
-        Object dexCache = XposedHelpers.getObjectField(aClass, "dexCache");
+    public static void init(XC_LoadPackage.LoadPackageParam lpparam) {
+        Native.dump(lpparam.packageName);
     }
 }

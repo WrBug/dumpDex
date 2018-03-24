@@ -12,7 +12,7 @@ jdk1.8
 
 ### 支持设备
 
-Android8.0以下机型
+大多数xposed环境的手机
 
 ### 分支
 
@@ -37,9 +37,6 @@ Android8.0以下机型
 
 [https://www.wrbug.com/](https://www.wrbug.com/)
 
-### xposed交流群
-
-欢迎对xposed有研究的**开发者**入群共同探讨，群号：629255416
 
 ### 支持开发，欢迎打赏
 
