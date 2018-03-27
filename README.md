@@ -34,6 +34,19 @@ apk文件为master分支打包应用，develop分支请自行编译
 
 [https://pan.baidu.com/s/1DTR-XjWnniFHx-cB1Iib5Q](https://pan.baidu.com/s/1DTR-XjWnniFHx-cB1Iib5Q)
 
+### 源码编译
+
+将源码下载或者clone到本地，使用android studio打开，编译成功后，安装apk，将 **libnativeDump.so** 复制到 */data/local/tmp* 目录，权限 设置为777，可以通过文件管理器操作，也可以使用如下adb shell命令
+
+```bash
+adb shell
+su
+cp /data/data/com.wrbug.dumpdex/lib/libnativeDump.so /data/local/tmp
+chmod 777 /data/local/tmp/libnativeDump.so
+
+```
+
+配置完成后激活xposed重启即可
 
 ### 更多精彩内容请关注博客
 
