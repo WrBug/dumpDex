@@ -16,6 +16,8 @@ created time: 2015-11-30
 // #include <asm/ptrace.h>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
+#include <unistd.h>
+#include <arm-linux-androideabi/asm/ptrace.h>
 
 #include "relocate.h"
 #include "include/inlineHook.h"
@@ -298,7 +300,7 @@ static void doInlineUnHook(struct inlineHookItem *item, int pos)
 
 	deleteInlineHookItem(pos);
 
-	cacheflush(CLEAR_BIT0(item->target_addr), CLEAR_BIT0(item->target_addr) + item->length, 0);
+    __builtin___clear_cache(CLEAR_BIT0(item->target_addr), CLEAR_BIT0(item->target_addr) + item->length);
 }
 
 enum ele7en_status inlineUnHook(uint32_t target_addr)
@@ -367,8 +369,8 @@ static void doInlineHook(struct inlineHookItem *item)
 	mprotect((void *) PAGE_START(CLEAR_BIT0(item->target_addr)), PAGE_SIZE * 2, PROT_READ | PROT_EXEC);
 
 	item->status = HOOKED;
-	
-	cacheflush(CLEAR_BIT0(item->target_addr), CLEAR_BIT0(item->target_addr) + item->length, 0);
+
+    __builtin___clear_cache(CLEAR_BIT0(item->target_addr), CLEAR_BIT0(item->target_addr) + item->length);
 }
 
 enum ele7en_status inlineHook(uint32_t target_addr)

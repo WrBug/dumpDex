@@ -36,9 +36,10 @@ apk文件为master分支打包应用，develop分支请自行编译
 
 ### 源码编译
 
-将源码下载或者clone到本地，使用android studio打开，编译成功后，安装apk，将 **libnativeDump.so** 复制到 */data/local/tmp* 目录，权限 设置为777，可以通过文件管理器操作，也可以使用如下adb shell命令
+将源码下载或者clone到本地，使用android studio打开，编译成功后，安装apk，将 **lib/armeabi/libnativeDump.so** 复制到 */data/local/tmp/libnativeDump.so* ，权限 设置为777，arm64机型还需要将将 **lib/arm64-v8a/libnativeDump.so** 复制到 */data/local/tmp/libnativeDump64.so*可以通过文件管理器操作，也可以使用如下adb shell命令
 
 ```bash
+#仅适用于32位手机
 adb shell
 su
 cp /data/data/com.wrbug.dumpdex/lib/libnativeDump.so /data/local/tmp

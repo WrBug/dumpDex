@@ -10,6 +10,7 @@
 #include <time.h>
 #include <string>
 #include <dlfcn.h>
+#include <string.h>
 
 #define TAG "dumpDex->"
 static char pname[256];
@@ -67,11 +68,20 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
         __android_log_print(ANDROID_LOG_ERROR, TAG, "Error: unable to find the SO : libart.so");
         return;
     }
-    void *open_common_addr = ndk_dlsym(handle,
-                                       "_ZN3art7DexFile10OpenCommonEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+    void *open_common_addr = NULL;
+#if defined(__aarch64__)
+    open_common_addr = ndk_dlsym(handle,
+                                 "_ZN3art7DexFile10OpenCommonEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+    __android_log_print(ANDROID_LOG_ERROR, TAG,
+                        "open_common_addr= _ZN3art7DexFile10OpenCommonEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+#elif defined(__arm__)
+    open_common_addr = ndk_dlsym(handle,"_ZN3art7DexFile10OpenCommonEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+        __android_log_print(ANDROID_LOG_ERROR, TAG, "open_common_addr= _ZN3art7DexFile10OpenCommonEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+#endif
+
     if (open_common_addr == NULL) {
         __android_log_print(ANDROID_LOG_ERROR, TAG,
-                            "Error: unable to find the Symbol : _ZN3art7DexFile10OpenCommonEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+                            "Error: unable to find the Symbol : ");
         return;
     }
     if (registerInlineHook((uint32_t) open_common_addr, (uint32_t) new_opencommon,

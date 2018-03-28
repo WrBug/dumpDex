@@ -30,13 +30,5 @@ public class OreoDump {
 
     public static void init(final XC_LoadPackage.LoadPackageParam lpparam) {
         Native.dump(lpparam.packageName);
-        XposedHelpers.findAndHookMethod("android.app.Instrumentation", lpparam.classLoader, "newApplication", ClassLoader.class, String.class, Context.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                log("Application=" + param.getResult());
-                Native.dump(lpparam.packageName);
-            }
-        });
-
     }
 }

@@ -10,6 +10,9 @@
 #include <sys/mman.h>
 #include <sys/system_properties.h>
 #include <android/log.h>
+#include <sys/user.h>
+#include <string.h>
+
 #define LOG_TAG   "ndk_dlopen"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
