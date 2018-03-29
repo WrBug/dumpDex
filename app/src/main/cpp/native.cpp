@@ -32,7 +32,7 @@ void writeToFile(const char *pname, u_int8_t *data, size_t length) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "open or create file error");
         return;
     }
-    int ret = write(dex, data, length);
+    int ret = (int) write(dex, data, length);
     if (ret < 0) {
         __android_log_print(ANDROID_LOG_ERROR, TAG, "write file error");
     } else {

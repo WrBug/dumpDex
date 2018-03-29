@@ -2,9 +2,11 @@ package com.wrbug.dumpdex.dump;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 
 import com.wrbug.dumpdex.BuildConfig;
 import com.wrbug.dumpdex.FileUtils;
+import com.wrbug.dumpdex.PackerInfo;
 
 import java.io.File;
 
@@ -21,13 +23,24 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class LowSdkDump {
     public static void log(String txt) {
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
-        XposedBridge.log("dumpdex-> " + txt);
+
+        XposedBridge.log("dumpdex.LowSdkDump-> " + txt);
     }
 
-    public static void init(final XC_LoadPackage.LoadPackageParam lpparam) {
+    public static void init(final XC_LoadPackage.LoadPackageParam lpparam, PackerInfo.Type type) {
+        log("start hook Instrumentation#newApplication");
+        if (type == PackerInfo.Type.BAI_DU) {
+            log("hook CrashHandler#uncaughtException");
+            XposedHelpers.findAndHookMethod("com.baidu.protect.CrashHandler", lpparam.classLoader, "uncaughtException", Thread.class, Throwable.class, new XC_MethodHook() {
+
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    log("拦截uncaughtException");
+                    param.setResult(null);
+                }
+
+            });
+        }
         XposedHelpers.findAndHookMethod("android.app.Instrumentation", lpparam.classLoader, "newApplication", ClassLoader.class, String.class, Context.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {

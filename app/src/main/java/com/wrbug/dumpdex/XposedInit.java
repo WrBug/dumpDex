@@ -9,7 +9,6 @@ import java.io.File;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
@@ -20,21 +19,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  */
 public class XposedInit implements IXposedHookLoadPackage {
 
-    /**
-     * 加固应用包含的包名，如果无法脱壳，请将application的包名，加到此数组
-     * com.stub.StubApp 360加固
-     * s.h.e.l.l.S 爱加密
-     * com.secneo.apkwrapper.ApplicationWrapper 梆梆加固
-     * com.tencent.StubShell.TxAppEntry 腾讯加固
-     */
-    private String[] packages = {"com.stub.StubApp", "s.h.e.l.l.S",
-            "com.secneo.apkwrapper.ApplicationWrapper", "com.tencent.StubShell.TxAppEntry"
-            , "com.baidu.protect.StubApplication"};
 
     public static void log(String txt) {
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
+
         XposedBridge.log("dumpdex-> " + txt);
     }
 
@@ -47,15 +34,8 @@ public class XposedInit implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) {
-        Class<?> clazz = null;
-        for (String aPackage : packages) {
-            clazz = XposedHelpers.findClassIfExists(aPackage, lpparam.classLoader);
-            if (clazz != null) {
-                log("find class:" + aPackage);
-                break;
-            }
-        }
-        if (clazz == null) {
+        PackerInfo.Type type = PackerInfo.find(lpparam);
+        if (type == null) {
             return;
         }
         final String packageName = lpparam.packageName;
@@ -65,10 +45,11 @@ public class XposedInit implements IXposedHookLoadPackage {
             if (!parent.exists() || !parent.isDirectory()) {
                 parent.mkdirs();
             }
+            log("sdk version:" + Build.VERSION.SDK_INT);
             if (Build.VERSION.SDK_INT >= 26) {
                 OreoDump.init(lpparam);
             } else {
-                LowSdkDump.init(lpparam);
+                LowSdkDump.init(lpparam,type);
             }
 
         }
