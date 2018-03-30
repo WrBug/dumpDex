@@ -2,11 +2,18 @@
 #include <jni.h>
 #include <pthread.h>
 /* Header for class com_wrbug_xposeddemo_Native */
+#if defined(__aarch64__)
+
+#include "And64InlineHook.hpp"
+
+#endif
+
 
 #ifndef _Included_com_wrbug_xposeddemo_Native
 #define _Included_com_wrbug_xposeddemo_Native
 #ifdef __cplusplus
 extern "C" {
+
 #include "dlopen.h"
 #include "include/inlineHook.h"
 #endif

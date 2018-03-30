@@ -20,6 +20,7 @@ void dumpFileName(char *name, int len, const char *pname, int dexlen) {
     time(&now);
     memset(name, 0, len);
     sprintf(name, "/data/data/%s/dump/source-%u.dex", pname, dexlen);
+
 }
 
 void writeToFile(const char *pname, u_int8_t *data, size_t length) {
@@ -69,15 +70,25 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
         return;
     }
     void *open_common_addr = NULL;
+
 #if defined(__aarch64__)
     open_common_addr = ndk_dlsym(handle,
                                  "_ZN3art7DexFile10OpenCommonEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
     __android_log_print(ANDROID_LOG_ERROR, TAG,
                         "open_common_addr= _ZN3art7DexFile10OpenCommonEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
+
+    if (open_common_addr == NULL) {
+        __android_log_print(ANDROID_LOG_ERROR, TAG,
+                            "Error: unable to find the Symbol : ");
+        return;
+    }
+    A64HookFunction(open_common_addr, (void *const) new_opencommon,
+                    (void **) old_opencommon);
+    __android_log_print(ANDROID_LOG_DEFAULT, TAG, "loaded so: libart.so");
+
 #elif defined(__arm__)
     open_common_addr = ndk_dlsym(handle,"_ZN3art7DexFile10OpenCommonEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
         __android_log_print(ANDROID_LOG_ERROR, TAG, "open_common_addr= _ZN3art7DexFile10OpenCommonEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_PNS0_12VerifyResultE");
-#endif
 
     if (open_common_addr == NULL) {
         __android_log_print(ANDROID_LOG_ERROR, TAG,
@@ -98,4 +109,7 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
         __android_log_print(ANDROID_LOG_ERROR, TAG, "register2 hook success!");
     }
     __android_log_print(ANDROID_LOG_DEFAULT, TAG, "loaded so: libart.so");
+#endif
+
+
 }
