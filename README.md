@@ -10,7 +10,7 @@ Android Studio 3.0
 
 ### 支持设备
 
-大多数xposed环境的手机
+大多数xposed环境的手机，暂不支持模拟器
 
 ### 分支
 
