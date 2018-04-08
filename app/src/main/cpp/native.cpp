@@ -75,9 +75,15 @@ void *new_arm64__opencommon(uint8_t *base, size_t size, void *location,
 
 JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
         (JNIEnv *env, jclass obj, jstring packageName) {
+    static bool is_hook = false;
     char *p = (char *) env->GetStringUTFChars(packageName, 0);
     __android_log_print(ANDROID_LOG_ERROR, TAG, "%s", p);
+    if (is_hook) {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "hooked ignore");
+        return;
+    }
     strcpy(pname, p);
+    env->ReleaseStringChars(packageName, (const jchar *) p);
     ndk_init(env);
     void *handle = ndk_dlopen("libart.so", RTLD_NOW);
     if (handle == NULL) {
@@ -98,7 +104,7 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
         return;
     }
     A64HookFunction(open_common_addr, (void *const) new_arm64__opencommon,
-                    (void **) old_arm64_opencommon);
+                    (void **) &old_arm64_opencommon);
     __android_log_print(ANDROID_LOG_DEFAULT, TAG, "loaded so: libart.so");
 
 #elif defined(__arm__)
@@ -125,6 +131,6 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
     }
     __android_log_print(ANDROID_LOG_DEFAULT, TAG, "loaded so: libart.so");
 #endif
-
-
+    __android_log_print(ANDROID_LOG_INFO, TAG, "hook init complete");
+    is_hook = true;
 }
