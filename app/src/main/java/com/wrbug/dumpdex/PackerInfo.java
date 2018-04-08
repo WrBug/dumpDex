@@ -17,7 +17,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 /**
  * PackerInfo
  *
- * @author suanlafen
+ * @author WrBug
  * @since 2018/3/29
  * <p>
  * 加壳类型
@@ -80,7 +80,6 @@ public class PackerInfo {
     }
 
     public static void log(String txt) {
-
         XposedBridge.log("dumpdex.PackerInfo-> " + txt);
     }
 
@@ -103,7 +102,12 @@ public class PackerInfo {
     }
 
     public enum Type {
-        QI_HOO("360加固"), AI_JIA_MI("爱加密"), BANG_BANG("梆梆加固"), TENCENT("腾讯加固"), BAI_DU("百度加固");
+
+        QI_HOO("360加固"),
+        AI_JIA_MI("爱加密"),
+        BANG_BANG("梆梆加固"),
+        TENCENT("腾讯加固"),
+        BAI_DU("百度加固");
 
         String name;
 

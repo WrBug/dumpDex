@@ -17,7 +17,13 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native.cpp src/main/cpp/dlopen.c src/main/cpp/inlineHook.c src/main/cpp/relocate.c src/main/cpp/And64InlineHook.cpp )
+             src/main/cpp/native.cpp
+             src/main/cpp/dlopen.c
+             src/main/cpp/inlineHook.c
+             src/main/cpp/relocate.c
+             src/main/cpp/And64InlineHook.cpp
+             src/main/cpp/util/deviceutils.cpp
+              src/main/cpp/util/fileutils.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

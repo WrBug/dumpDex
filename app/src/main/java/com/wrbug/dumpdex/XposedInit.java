@@ -4,6 +4,7 @@ import android.os.Build;
 
 import com.wrbug.dumpdex.dump.LowSdkDump;
 import com.wrbug.dumpdex.dump.OreoDump;
+import com.wrbug.dumpdex.util.DeviceUtils;
 
 import java.io.File;
 
@@ -46,7 +47,7 @@ public class XposedInit implements IXposedHookLoadPackage {
                 parent.mkdirs();
             }
             log("sdk version:" + Build.VERSION.SDK_INT);
-            if (Build.VERSION.SDK_INT >= 26) {
+            if (DeviceUtils.isOreo()) {
                 OreoDump.init(lpparam);
             } else {
                 LowSdkDump.init(lpparam,type);

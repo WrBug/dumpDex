@@ -16,7 +16,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 /**
  * OreoDump
  *
- * @author suanlafen
+ * @author WrBug
  * @since 2018/3/23
  */
 public class OreoDump {

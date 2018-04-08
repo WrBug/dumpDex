@@ -1,4 +1,4 @@
-package com.wrbug.dumpdex;
+package com.wrbug.dumpdex.util;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;

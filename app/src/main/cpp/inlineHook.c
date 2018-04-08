@@ -13,7 +13,6 @@ created time: 2015-11-30
 #include <dirent.h>
 #include <signal.h>
 #include <sys/mman.h>
-// #include <asm/ptrace.h>
 #include <sys/wait.h>
 #include <sys/ptrace.h>
 #include <unistd.h>
@@ -21,7 +20,7 @@ created time: 2015-11-30
 #include <android/log.h>
 
 #include "relocate.h"
-#include "include/inlineHook.h"
+#include "inlineHook.h"
 
 #ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
