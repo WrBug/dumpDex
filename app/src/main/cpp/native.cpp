@@ -43,19 +43,34 @@ void writeToFile(const char *pname, u_int8_t *data, size_t length) {
 }
 
 
-art::DexFile *(*old_opencommon)(void *DexFile_thiz, uint8_t *base, size_t size, void *location,
-                                uint32_t location_checksum, void *oat_dex_file, bool verify,
-                                bool verify_checksum,
-                                void *error_meessage, void *verify_result) = NULL;
+void *(*old_opencommon)(void *DexFile_thiz, uint8_t *base, size_t size, void *location,
+                        uint32_t location_checksum, void *oat_dex_file, bool verify,
+                        bool verify_checksum,
+                        void *error_meessage, void *verify_result);
 
-art::DexFile *new_opencommon(void *DexFile_thiz, uint8_t *base, size_t size, void *location,
-                             uint32_t location_checksum, void *oat_dex_file, bool verify,
-                             bool verify_checksum,
-                             void *error_meessage, void *verify_result) {
+void *new_opencommon(void *DexFile_thiz, uint8_t *base, size_t size, void *location,
+                     uint32_t location_checksum, void *oat_dex_file, bool verify,
+                     bool verify_checksum,
+                     void *error_meessage, void *verify_result) {
     writeToFile(pname, base, size);
     return (*old_opencommon)(DexFile_thiz, base, size, location, location_checksum,
                              oat_dex_file, verify, verify_checksum, error_meessage,
                              verify_result);
+}
+
+void *(*old_arm64_opencommon)(uint8_t *base, size_t size, void *location,
+                              uint32_t location_checksum, void *oat_dex_file, bool verify,
+                              bool verify_checksum,
+                              void *error_meessage, void *verify_result);
+
+void *new_arm64__opencommon(uint8_t *base, size_t size, void *location,
+                            uint32_t location_checksum, void *oat_dex_file, bool verify,
+                            bool verify_checksum,
+                            void *error_meessage, void *verify_result) {
+    writeToFile(pname, base, size);
+    return (*old_arm64_opencommon)(base, size, location, location_checksum,
+                                   oat_dex_file, verify, verify_checksum, error_meessage,
+                                   verify_result);
 }
 
 JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
@@ -82,8 +97,8 @@ JNIEXPORT void JNICALL Java_com_wrbug_dumpdex_Native_dump
                             "Error: unable to find the Symbol : ");
         return;
     }
-    A64HookFunction(open_common_addr, (void *const) new_opencommon,
-                    (void **) old_opencommon);
+    A64HookFunction(open_common_addr, (void *const) new_arm64__opencommon,
+                    (void **) old_arm64_opencommon);
     __android_log_print(ANDROID_LOG_DEFAULT, TAG, "loaded so: libart.so");
 
 #elif defined(__arm__)
