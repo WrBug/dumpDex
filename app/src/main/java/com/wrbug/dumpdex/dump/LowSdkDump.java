@@ -29,7 +29,7 @@ public class LowSdkDump {
 
     public static void init(final XC_LoadPackage.LoadPackageParam lpparam, PackerInfo.Type type) {
         log("start hook Instrumentation#newApplication");
-        if (DeviceUtils.isNougat()) {
+        if (DeviceUtils.supportNativeHook()) {
             Native.dump(lpparam.packageName);
         }
         if (type == PackerInfo.Type.BAI_DU) {
