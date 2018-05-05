@@ -28,8 +28,6 @@ Android Studio 3.0
 
 apk文件为master分支打包应用，develop分支请自行编译
 
-[https://doc.wrbug.com/](https://doc.wrbug.com/)
-
 [https://pan.baidu.com/s/1Rv9CbvoOlj7TTXyDmbCh-g](https://pan.baidu.com/s/1Rv9CbvoOlj7TTXyDmbCh-g)
 
 ### 源码编译
