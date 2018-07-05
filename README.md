@@ -49,6 +49,9 @@ chmod 777 /data/local/tmp/libnativeDump.so
 
 [https://www.wrbug.com/](https://www.wrbug.com/)
 
+### 相关文章(网友分享)
+
+[dumpDex 脱壳原理](http://liteng1220.com/blog/articles/dumpdex-principle/)
 
 ### 支持开发，欢迎打赏
 
