@@ -53,6 +53,8 @@ chmod 777 /data/local/tmp/libnativeDump.so
 
 [dumpDex 脱壳原理](http://liteng1220.com/blog/articles/dumpdex-principle/)
 
+[Android逆向之路---脱壳360加固原理解析](https://juejin.im/post/5c1934226fb9a04a0b221c3c)
+
 ### 支持开发，欢迎打赏
 
 ![](/pay.png)
