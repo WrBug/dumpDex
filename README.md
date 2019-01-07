@@ -10,7 +10,7 @@ Android Studio 3.0
 
 ### 支持设备
 
-大多数xposed环境的手机，暂不支持模拟器，（android8.0手机dump 64位应用会闪退，实际上已经dump成功）
+大多数xposed环境的手机，暂不支持模拟器
 
 ### 分支
 
