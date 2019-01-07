@@ -28,7 +28,15 @@ Android Studio 3.0
 
 apk文件为master分支打包应用，develop分支请自行编译
 
-[https://pan.baidu.com/s/1Rv9CbvoOlj7TTXyDmbCh-g](https://pan.baidu.com/s/1Rv9CbvoOlj7TTXyDmbCh-g)
+[https://github.com/WrBug/dumpDex/releases](https://github.com/WrBug/dumpDex/releases)
+
+
+### 可视化工具
+
+[https://github.com/WrBug/DeveloperHelper](https://github.com/WrBug/DeveloperHelper)
+
+易开发已集成dumpdex功能
+
 
 ### 源码编译
 
