@@ -1,4 +1,4 @@
-# dumpDex-Android脱壳神器
+# dumpDex-Android脱壳
 
 > 插件需要在xposed环境中使用,支持市面上大多数加密壳,软件仅供学习用，请勿用于其他用途,项目不是成品，可能会引起软件崩溃
 
@@ -49,6 +49,11 @@ chmod 777 /data/local/tmp/libnativeDump.so
 
 [https://www.wrbug.com/](https://www.wrbug.com/)
 
+### 相关文章(网友分享)
+
+[dumpDex 脱壳原理](http://liteng1220.com/blog/articles/dumpdex-principle/)
+
+[Android逆向之路---脱壳360加固原理解析](https://juejin.im/post/5c1934226fb9a04a0b221c3c)
 
 ### 支持开发，欢迎打赏
 
