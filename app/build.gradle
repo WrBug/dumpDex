@@ -18,9 +18,9 @@ android {
                 cppFlags "-std=c++14","-fms-extensions"
             }
         }
-//        ndk {
-//            abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
-//        }
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
+        }
     }
     buildTypes {
         debug {

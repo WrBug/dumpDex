@@ -48,3 +48,12 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
+
+
+if(${ANDROID_ABI} STREQUAL "armeabi-v7a")
+    include_directories(${ANDROID_SYSROOT}/usr/include/arm-linux-androidabi)
+elseif(${ANDROID_ABI} STREQUAL "arm64-v8a")
+    include_directories(${ANDROID_SYSROOT}/usr/include/aarch64-linux-android)
+else()
+    include_directories(${ANDROID_SYSROOT}/usr/include/arm-linux-androidabi)
+endif()
