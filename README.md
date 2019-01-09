@@ -12,9 +12,18 @@ Android Studio 3.0
 
 大多数xposed环境的手机，暂不支持模拟器
 
+### apk 下载
+
+[https://github.com/WrBug/dumpDex/releases](https://github.com/WrBug/dumpDex/releases)
+
+[https://github.com/WrBug/DeveloperHelper](https://github.com/WrBug/DeveloperHelper)  **推荐下载**
+
+易开发已集成dumpdex功能
+
 ### 分支
 
 [develop](https://github.com/WrBug/dumpDex/tree/develop) 开发分支
+
 
 [master](https://github.com/WrBug/dumpDex/tree/master) 稳定分支
 
@@ -24,18 +33,7 @@ Android Studio 3.0
 
 **apk文件不会实时更新，获取最新apk请自行编译源码**
 
-### apk 下载
 
-apk文件为master分支打包应用，develop分支请自行编译
-
-[https://github.com/WrBug/dumpDex/releases](https://github.com/WrBug/dumpDex/releases)
-
-
-### 可视化工具
-
-[https://github.com/WrBug/DeveloperHelper](https://github.com/WrBug/DeveloperHelper)
-
-易开发已集成dumpdex功能
 
 
 ### 源码编译
