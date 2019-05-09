@@ -27,6 +27,10 @@ public class DeviceUtils {
         return sdkInit == 26 || sdkInit == 27;
     }
 
+    public static boolean isPie() {
+        return sdkInit == 28;
+    }
+
     public static boolean isMarshmallow() {
         return sdkInit == 23;
     }

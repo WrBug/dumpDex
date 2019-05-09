@@ -47,7 +47,7 @@ public class XposedInit implements IXposedHookLoadPackage {
                 parent.mkdirs();
             }
             log("sdk version:" + Build.VERSION.SDK_INT);
-            if (DeviceUtils.isOreo()) {
+            if (DeviceUtils.isOreo() || DeviceUtils.isPie()) {
                 OreoDump.init(lpparam);
             } else {
                 LowSdkDump.init(lpparam,type);
