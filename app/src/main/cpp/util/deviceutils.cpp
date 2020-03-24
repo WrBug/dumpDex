@@ -32,6 +32,10 @@ bool is_pie() {
     return sdk_int == 28;
 }
 
+bool is_android10() {
+    return sdk_int == 29;
+}
+
 bool is_oreo() {
     return sdk_int == 27 || sdk_int == 26;
 }
@@ -47,7 +51,7 @@ bool is_marshmallow() {
 char *get_open_function_flag() {
     init_sdk_init();
     if (is_arm_64()) {
-        if(is_pie()){
+        if(is_pie() || is_android10()){
             return "_ZN3art13DexFileLoader10OpenCommonEPKhmS2_mRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_NS3_10unique_ptrINS_16DexFileContainerENS3_14default_deleteISH_EEEEPNS0_12VerifyResultE";
         }
         if (is_oreo()) {
@@ -57,7 +61,7 @@ char *get_open_function_flag() {
             return "_ZN3art7DexFile10OpenMemoryEPKhmRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPNS_6MemMapEPKNS_10OatDexFileEPS9_";
         }
     } else {
-        if (is_pie()) {
+        if (is_pie() || is_android10()) {
             return "_ZN3art13DexFileLoader10OpenCommonEPKhjS2_jRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPKNS_10OatDexFileEbbPS9_NS3_10unique_ptrINS_16DexFileContainerENS3_14default_deleteISH_EEEEPNS0_12VerifyResultE";
         }
 

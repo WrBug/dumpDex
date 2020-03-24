@@ -31,6 +31,10 @@ public class DeviceUtils {
         return sdkInit == 28;
     }
 
+    public static boolean isAndroid10() {
+        return sdkInit == 29;
+    }
+
     public static boolean isMarshmallow() {
         return sdkInit == 23;
     }
