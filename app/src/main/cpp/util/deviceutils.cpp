@@ -162,36 +162,86 @@ static void *new_opencommon(void *DexFile_thiz, uint8_t *base, size_t size, void
 }
 /////////////////////
 
-void **get_old_open_function_addr() {
-    if (is_arm_64()) {
-        if (is_oreo()) {
-            return reinterpret_cast<void **>(&old_arm64_open_common);
-        } else {
-            return reinterpret_cast<void **>(&old_arm64_open_memory);
 
-        }
+static void *(*old_pie_open_memory)(void *DexFile_thiz, uint8_t *base,
+                                    size_t size,
+                                    uint8_t *data_base,
+                                    size_t data_size,
+                                    void *location,
+                                    uint32_t location_checksum,
+                                    void *oat_dex_file,
+                                    bool verify,
+                                    bool verify_checksum,
+                                    void *error_msg,
+                                    void *container,
+                                    void *verify_result);
+
+static void *(new_pie_open_memory)(void *DexFile_thiz, uint8_t *base,
+                                   size_t size,
+                                   uint8_t *data_base,
+                                   size_t data_size,
+                                   void *location,
+                                   uint32_t location_checksum,
+                                   void *oat_dex_file,
+                                   bool verify,
+                                   bool verify_checksum,
+                                   void *error_msg,
+                                   void *container,
+                                   void *verify_result) {
+  if (size > DEX_MIN_LEN) {
+    save_dex_file(base, size);
+  }
+  return (*old_pie_open_memory)(DexFile_thiz,
+                                base,
+                                size,
+                                data_base,
+                                data_size,
+                                location,
+                                location_checksum,
+                                oat_dex_file,
+                                verify,
+                                verify_checksum,
+                                error_msg,
+                                container,
+                                verify_result);
+}
+
+void **get_old_open_function_addr() {
+  if (is_arm_64()) {
+    if (is_oreo()) {
+      return reinterpret_cast<void **>(&old_arm64_open_common);
     } else {
-        if (is_oreo()) {
-            return reinterpret_cast<void **>(&old_opencommon);
-        } else {
-            return reinterpret_cast<void **>(&old_nougat_open_memory);
-        }
+      return reinterpret_cast<void **>(&old_arm64_open_memory);
+
     }
+  } else {
+    if (is_oreo()) {
+      return reinterpret_cast<void **>(&old_opencommon);
+    } else {
+      if (is_pie()) {
+        return reinterpret_cast<void **>(&old_pie_open_memory);
+      }
+      return reinterpret_cast<void **>(&old_nougat_open_memory);
+    }
+  }
 }
 
 void *get_new_open_function_addr() {
-    if (is_arm_64()) {
-        if (is_oreo()) {
-            return reinterpret_cast<void *>(new_arm64_open_common);
-        } else {
-            return reinterpret_cast<void *>(new_arm64_open_memory);
-
-        }
+  if (is_arm_64()) {
+    if (is_oreo()) {
+      return reinterpret_cast<void *>(new_arm64_open_common);
     } else {
-        if (is_oreo()) {
-            return reinterpret_cast<void *>(new_opencommon);
-        } else {
-            return reinterpret_cast<void *>(new_nougat_open_memory);
-        }
+      return reinterpret_cast<void *>(new_arm64_open_memory);
+
     }
+  } else {
+    if (is_oreo()) {
+      return reinterpret_cast<void *>(new_opencommon);
+    } else {
+      if (is_pie()) {
+        return reinterpret_cast<void *>(new_pie_open_memory);
+      }
+      return reinterpret_cast<void *>(new_nougat_open_memory);
+    }
+  }
 }
